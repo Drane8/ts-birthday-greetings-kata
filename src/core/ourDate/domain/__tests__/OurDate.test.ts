@@ -1,4 +1,4 @@
-import { OurDate } from "../src/core/ourDate/OurDate";
+import { OurDate } from "../OurDate";
 
 describe("OurDate", () => {
   it("getters", () => {
