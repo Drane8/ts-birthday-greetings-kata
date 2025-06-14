@@ -4,14 +4,13 @@ import { Employee } from "../domain/Employee";
 import { EmployeeRepository } from "../domain/EmployeeRepository";
 import { OurDate } from "src/core/ourDate/domain/OurDate";
 
+const FILE_PATH = "../../../../resources/employee_data.txt";
+
 export class LocalEmployeeRepository implements EmployeeRepository {
-  constructor(private fileName: string) {}
+  constructor() {}
 
   async list(): Promise<Employee[]> {
-    const data = fs.readFileSync(
-      path.resolve(__dirname, `../../../../resources/${this.fileName}`),
-      "UTF-8"
-    );
+    const data = fs.readFileSync(path.resolve(__dirname, FILE_PATH), "UTF-8");
 
     // split the contents by new line
     const lines = data.split(/\r?\n/);
@@ -28,7 +27,7 @@ export class LocalEmployeeRepository implements EmployeeRepository {
       );
     });
     return employees;
-  };
+  }
   async listByBirthday(ourDate: OurDate): Promise<Employee[]> {
     const employees = await this.list();
     return employees.filter((employee) => employee.isBirthday(ourDate));

@@ -6,15 +6,13 @@ import { LocalEmployeeRepository } from "src/core/employee/infraestructure/Local
 import { NodeMailerMailRepository } from "src/core/mail/infraestructure/NodeMailerMailRepository";
 
 describe("Acceptance", () => {
-  const SMTP_PORT = 1025;
-  const SMTP_URL = "127.0.0.1";
   let service: BirthdayService;
 
   beforeEach(async () => {
     await startMailhog();
     service = new BirthdayService(
-      new LocalEmployeeRepository("employee_data.txt"),
-      new NodeMailerMailRepository(SMTP_URL, SMTP_PORT)
+      new LocalEmployeeRepository(),
+      new NodeMailerMailRepository()
     );
   });
 

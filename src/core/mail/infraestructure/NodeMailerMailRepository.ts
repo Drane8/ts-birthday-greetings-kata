@@ -6,13 +6,15 @@ import { Mail } from "../domain/Mail";
 
 interface Message extends SMTPTransport.Options, NodeMail.Options {}
 
+const SMTP_PORT = 1025;
+const SMTP_URL = "127.0.0.1";
 export class NodeMailerMailRepository implements MailRepository {
-  constructor(private smtpHost: string, private smtpPort: number) {}
-  
-   async send(mail: Mail) {
+  constructor() {}
+
+  async send(mail: Mail) {
     const message = {
-      host: this.smtpHost,
-      port: this.smtpPort,
+      host: SMTP_URL,
+      port: SMTP_PORT,
       from: mail.getSender(),
       to: [mail.getRecipent()],
       subject: mail.getSubject(),
