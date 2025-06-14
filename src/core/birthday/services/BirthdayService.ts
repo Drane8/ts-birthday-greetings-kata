@@ -1,66 +1,16 @@
-
-import nodemailer from "nodemailer";
 import { OurDate } from "../../ourDate/domain/OurDate";
-import Mail from "nodemailer/lib/mailer";
-import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { EmployeeRepository } from "src/core/employee/domain/EmployeeRepository";
+import { MailRepository } from "src/core/mail/domain/MailRepository";
 
 export class BirthdayService {
+  constructor(
+    private employeeRepository: EmployeeRepository,
+    private mailRepository:MailRepository,){}
   async sendGreetings(
-    employeeRepository: EmployeeRepository,
-    ourDate: OurDate,
-    smtpHost: string,
-    smtpPort: number
+    ourDate: OurDate
   ) {
-    const employees = await employeeRepository.listByBirthday(ourDate);
-
-    //enviar correos
-    employees.forEach((employee) => {
-        const recipient = employee.getEmail();
-        const body = "Happy Birthday, dear %NAME%!".replace(
-          "%NAME%",
-          employee.getFirstName()
-        );
-        const subject = "Happy Birthday!";
-        this.sendMessage(
-          smtpHost,
-          smtpPort,
-          "sender@here.com",
-          subject,
-          body,
-          recipient
-        );
-    });
-  }
-
-  async sendMessage(
-    smtpHost: string,
-    smtpPort: number,
-    sender: string,
-    subject: string,
-    body: string,
-    recipient: string
-  ) {
-    const message = {
-      host: smtpHost,
-      port: smtpPort,
-      from: sender,
-      to: [recipient],
-      subject,
-      text: body,
-    };
-
-    this.deliveryMessage(message);
-  }
-
-  // made protected for testing :-(
-  protected async deliveryMessage({ host, port, ...msg }: Message) {
-    const transport = nodemailer.createTransport({ host, port });
-
-    await transport.sendMail(msg);
+    const employees = await this.employeeRepository.listByBirthday(ourDate);
+    this.mailRepository.sendBirthdayMails(employees);
   }
 }
-
-export interface Message extends SMTPTransport.Options, Mail.Options {}
-
 

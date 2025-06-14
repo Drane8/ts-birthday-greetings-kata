@@ -3,6 +3,7 @@ import { BirthdayService } from "../src/core/birthday/services/BirthdayService";
 import { messagesSent, startMailhog, stopMailHog } from "./mailhog";
 import flushPromises from "flush-promises";
 import { LocalEmployeeRepository } from "src/core/employee/infraestructure/LocalEmployeeRepository";
+import { NodeMailerMailRepository } from "src/core/mail/infraestructure/NodeMailerMailRepository";
 
 describe("Acceptance", () => {
   const SMTP_PORT = 1025;
@@ -11,7 +12,10 @@ describe("Acceptance", () => {
 
   beforeEach(async () => {
     await startMailhog();
-    service = new BirthdayService();
+    service = new BirthdayService(
+      new LocalEmployeeRepository("employee_data.txt"),
+      new NodeMailerMailRepository(SMTP_URL, SMTP_PORT)
+    );
   });
 
   afterEach(async () => {
@@ -19,12 +23,7 @@ describe("Acceptance", () => {
   });
 
   it("base scenario", async () => {
-    service.sendGreetings(
-      new LocalEmployeeRepository("employee_data.txt"),
-      new OurDate("2008/10/08"),
-      SMTP_URL,
-      SMTP_PORT
-    );
+    service.sendGreetings(new OurDate("2008/10/08"));
     await flushPromises();
 
     const messages = await messagesSent();
@@ -38,12 +37,7 @@ describe("Acceptance", () => {
   });
 
   it("will not send emails when nobodys birthday", async () => {
-    service.sendGreetings(
-      new LocalEmployeeRepository("employee_data.txt"),
-      new OurDate("2008/01/01"),
-      SMTP_URL,
-      SMTP_PORT
-    );
+    service.sendGreetings(new OurDate("2008/01/01"));
     await flushPromises();
 
     const messages = await messagesSent();
