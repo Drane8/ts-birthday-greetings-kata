@@ -9,8 +9,6 @@ interface Message extends SMTPTransport.Options, NodeMail.Options {}
 const SMTP_PORT = 1025;
 const SMTP_URL = "127.0.0.1";
 export class NodeMailerMailRepository implements MailRepository {
-  constructor() {}
-
   async send(mail: Mail) {
     const message = {
       host: SMTP_URL,

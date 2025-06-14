@@ -7,9 +7,7 @@ import { OurDate } from "src/core/ourDate/domain/OurDate";
 const FILE_PATH = "../../../../resources/employee_data.txt";
 
 export class LocalEmployeeRepository implements EmployeeRepository {
-  constructor() {}
-
-  async list(): Promise<Employee[]> {
+  async listByBirthday(ourDate: OurDate): Promise<Employee[]> {
     const data = fs.readFileSync(path.resolve(__dirname, FILE_PATH), "UTF-8");
 
     // split the contents by new line
@@ -26,10 +24,6 @@ export class LocalEmployeeRepository implements EmployeeRepository {
         employeeData[3]
       );
     });
-    return employees;
-  }
-  async listByBirthday(ourDate: OurDate): Promise<Employee[]> {
-    const employees = await this.list();
     return employees.filter((employee) => employee.isBirthday(ourDate));
   }
 }
