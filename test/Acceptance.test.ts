@@ -23,7 +23,7 @@ describe("Acceptance", () => {
   });
 
   it("base scenario", async () => {
-    service.sendGreetings(new OurDate("2008/10/08"));
+    service.sendGreetings(new OurDate("2008/10/08"),"sender@here.com");
     await flushPromises();
 
     const messages = await messagesSent();
@@ -37,7 +37,7 @@ describe("Acceptance", () => {
   });
 
   it("will not send emails when nobodys birthday", async () => {
-    service.sendGreetings(new OurDate("2008/01/01"));
+    service.sendGreetings(new OurDate("2008/01/01"),"sender@here.com");
     await flushPromises();
 
     const messages = await messagesSent();

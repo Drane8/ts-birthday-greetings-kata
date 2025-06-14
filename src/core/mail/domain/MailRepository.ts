@@ -1,5 +1,5 @@
-import { Employee } from "src/core/employee/domain/Employee";
+import { Mail } from "./Mail";
 
 export interface MailRepository {
-  sendBirthdayMails(employees: Employee[]): void;
+  send(mail:Mail): void;
 }
