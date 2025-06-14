@@ -12,11 +12,10 @@ export class BirthdayService {
     smtpHost: string,
     smtpPort: number
   ) {
-    const employees = await employeeRepository.list();
+    const employees = await employeeRepository.listByBirthday(ourDate);
 
     //enviar correos
     employees.forEach((employee) => {
-      if (employee.isBirthday(ourDate)) {
         const recipient = employee.getEmail();
         const body = "Happy Birthday, dear %NAME%!".replace(
           "%NAME%",
@@ -31,7 +30,6 @@ export class BirthdayService {
           body,
           recipient
         );
-      }
     });
   }
 

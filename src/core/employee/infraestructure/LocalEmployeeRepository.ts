@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { Employee } from "../domain/Employee";
 import { EmployeeRepository } from "../domain/EmployeeRepository";
+import { OurDate } from "src/core/ourDate/domain/OurDate";
 
 export class LocalEmployeeRepository implements EmployeeRepository {
   constructor(private fileName: string) {}
@@ -27,5 +28,9 @@ export class LocalEmployeeRepository implements EmployeeRepository {
       );
     });
     return employees;
+  };
+  async listByBirthday(ourDate: OurDate): Promise<Employee[]> {
+    const employees = await this.list();
+    return employees.filter((employee) => employee.isBirthday(ourDate));
   }
 }
